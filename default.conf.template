@@ -1,0 +1,22 @@
+server {
+  listen $PORT default_server;
+
+  charset utf-8;
+
+  location / {
+    root   /usr/share/nginx/html;
+    try_files $uri $uri/ /index.html /index.htm;
+  }
+
+  location /api/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Request-ID $request_id;
+    proxy_pass http://localhost:$BACKEND_PORT/;
+  }
+
+  location /media/ {
+    autoindex on;
+    alias /root/media/;
+  }
+}
